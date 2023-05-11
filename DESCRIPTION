@@ -1,12 +1,21 @@
 Package: MPS
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Multi-trait Parental Selection
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Bartolo de Jesús Villar-Hernández, Sergio Pérez Elizalde, Paulino Perez Rodriguez
+Maintainer: Bartolo de Jesús Villar-Hernández <bjesusvh@gmail.com>
+Description: Plant and animal breeders are interested in selecting the best individuals
+    as parents in succesive selection cycles. `MPS` compute 
+    Kullback-Leibler (kl), Energy Score (energy) and Multivariate 
+    Asymmetric (malf) distances for every potential parent
+    in a population to assist in multitrait selection.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Depends:
+    Matrix (>= 1.5-3),
+    tmvtnorm (>= 1.5),
+    parallel (>= 4.2.1),
+    doParallel (>= 1.0.17),
+    foreach (>= 1.5.2)
 RoxygenNote: 7.2.3
