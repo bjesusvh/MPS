@@ -13,6 +13,8 @@
 #' @param p (escalar) the proportion of selected candidates.
 #' @param method (string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
 #' @return A list of BVs, posterior expected loss and a logical vector that indicate what lines are selected.
+#' @references 
+#'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
 #' @export
 #'
 #' @examples
@@ -57,7 +59,7 @@
 #' # Plotting results
 #' colnames(out$yHat) <- colnames(Y)
 #' pairs(out$yHat,
-#'      col = ifelse(out$selected, "#2c7fb8", "darkgray"),
+#'      col = ifelse(out$selected, "red", "darkgray"),
 #'      pch = ifelse(out$selected, 19, 1))
 #' }
 FastMPS <- function(Xcand, B0, B, R, p, method = "kl"){

@@ -9,6 +9,8 @@ Description: Plant and animal breeders are interested in selecting the best indi
     Kullback-Leibler (kl), Energy Score (energy) and Multivariate 
     Asymmetric (malf) distances for every potential parent
     in a population to assist in multitrait selection.
+References:
+  Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -4,8 +4,8 @@
 \name{MPS-package}
 \alias{MPS}
 \alias{MPS-package}
-\title{MPS: What the Package Does (Title Case)}
+\title{MPS: Multi-trait Parental Selection}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Plant and animal breeders are interested in selecting the best individuals as parents in succesive selection cycles. `MPS` compute Kullback-Leibler (kl), Energy Score (energy) and Multivariate Asymmetric (malf) distances for every potential parent in a population to assist in multitrait selection.
 }
 \keyword{internal}

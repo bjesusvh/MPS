@@ -9,7 +9,51 @@
 #' @param p (escalar) the proportion of selected candidates.
 #' @param method (string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
 #' @return A list of BVs, approximated expected loss and a logical vector that indicate what lines are selected.
+#' @references 
+#'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
 #' @export
+#' @examples
+#' \dontrun{
+#' # Clean and setting local environment
+#' rm(list = ls())
+#' setwd("Put your working directory here")
+#' # Loading needed packages
+#' library(MPS)
+#' library(BGLR)
+#' # Loading dataset
+#' data(wheat)
+#' Y <- as.matrix(wheat.Y)
+#' X <- scale(wheat.X, center=TRUE, scale = TRUE)
+#' K <- wheat.A
+#' n <- nrow(Y)
+#'
+#' # Just for example: parental population
+#' idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
+#' YTrn <- Y
+#' YTrn[idPar,] <- NA
+#'
+#' # ModelFit using BGLR
+#' ETA <- list(list(X = X, model = "BRR"),
+#'             list(K = K, model = "RKHS"))
+#'
+#' model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,
+#'                     resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = FALSE),
+#'                     nIter = 30000,
+#'                     burnIn = 5000)
+#'
+#' # Retrieving puntual estimates
+#' R <- as.matrix(model$resCov$R)               # residual cov matrix
+#' B0 <- as.numeric(model$mu)                   # Overall mean
+#' yHat <- model$ETAHat[model$missing_records,] # Puntual BVs
+#'
+#' # Eval loss functions
+#' out <- ApproxMPS(B0 = B0, ETA = yHat, R = R, p = 0.1, method = "kl")
+#'
+#' # Plotting results
+#' pairs(out$yHat,
+#'   col = ifelse(out$selected, "red", "darkgray"),
+#'   pch = ifelse(out$selected, 19, 1))
+#' }
 ApproxMPS <- function(B0, ETA, R, target, p, method = "kl"){
 
   # Checking inputs

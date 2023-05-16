@@ -71,7 +71,10 @@ out <- FastMPS(Xcand = XPar,
 # Plotting results
 colnames(out$yHat) <- colnames(Y)
 pairs(out$yHat,
-     col = ifelse(out$selected, "#2c7fb8", "darkgray"),
+     col = ifelse(out$selected, "red", "darkgray"),
      pch = ifelse(out$selected, 19, 1))
 }
+}
+\references{
+Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
 }
