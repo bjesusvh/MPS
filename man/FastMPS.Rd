@@ -35,7 +35,7 @@ Parallelized multiLoss function to compute Kullback Leibler, Energy Score or Mul
 rm(list = ls())
 setwd("Put your working directory here")
 # Loading needed packages
-library(scoringGS)
+library(MPS)
 library(BGLR)
 # Loading dataset
 data(wheat)

@@ -23,7 +23,7 @@
 #' rm(list = ls())
 #' setwd("Put your working directory here")
 #' # Loading needed packages
-#' library(scoringGS)
+#' library(MPS)
 #' library(BGLR)
 #' # Loading dataset
 #' data(wheat)
