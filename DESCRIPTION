@@ -2,13 +2,9 @@ Package: MPS
 Type: Package
 Title: Multi-trait Parental Selection
 Version: 0.1.0
-Author: Bartolo de Jesús Villar-Hernández, Sergio Pérez Elizalde, Paulino Perez Rodriguez
+Author: Bartolo de Jesús Villar-Hernández, Paulino Perez Rodriguez
 Maintainer: Bartolo de Jesús Villar-Hernández <bjesusvh@gmail.com>
-Description: Plant and animal breeders are interested in selecting the best individuals
-    as parents in succesive selection cycles. `MPS` compute 
-    Kullback-Leibler (kl), Energy Score (energy) and Multivariate 
-    Asymmetric (malf) distances for every potential parent
-    in a population to assist in multitrait selection.
+Description: An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or Phenotypic Selection.
 References:
   Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037.
 License: GPL-3

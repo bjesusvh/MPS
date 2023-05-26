@@ -6,6 +6,6 @@
 \alias{MPS-package}
 \title{MPS: Multi-trait Parental Selection}
 \description{
-Plant and animal breeders are interested in selecting the best individuals as parents in succesive selection cycles. `MPS` compute Kullback-Leibler (kl), Energy Score (energy) and Multivariate Asymmetric (malf) distances for every potential parent in a population to assist in multitrait selection.
+An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or Phenotypic Selection.
 }
 \keyword{internal}
