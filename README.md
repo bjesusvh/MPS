@@ -6,7 +6,7 @@ An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or 
 
 **Example using Genomic Selection**
 
-```{r}
+```r
 # Cleaning and setting local environment
 rm(list = ls())
 setwd("path")
