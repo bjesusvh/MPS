@@ -49,7 +49,7 @@ out <- FastMPS(Xcand = XPar,
           B = B,
           R = R,
           p = 0.1,
-          method = "energy")
+          method = "kl")
 
 # Plotting results
 colnames(out$yHat) <- colnames(Y)
