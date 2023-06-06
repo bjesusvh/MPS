@@ -88,7 +88,8 @@ MPS <- function(Xcand, B0, B, R, p, target = NULL, method = "kl", verbose = FALS
   # Start calculations
   means <- colMeans(B0)
   desvEst <- sqrt(diag(xpnd(colMeans(R))))
-    if(is.null(target)){
+  
+  if(is.null(target)){
     target <- means + 2*desvEst  
   }else{
     if(!is.numeric(target)) stop("target must be a real vector.\n")
