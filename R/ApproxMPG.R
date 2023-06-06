@@ -54,7 +54,7 @@
 #'   col = ifelse(out$selected, "red", "darkgray"),
 #'   pch = ifelse(out$selected, 19, 1))
 #' }
-ApproxMPS <- function(B0, ETA, R, target, p, method = "kl"){
+ApproxMPS <- function(B0, ETA, R, p, method = "kl"){
 
   # Checking inputs
   if(!is.vector(B0)) stop("B0 must be a vector.\n")

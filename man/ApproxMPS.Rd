@@ -4,7 +4,7 @@
 \alias{ApproxMPS}
 \title{Multitrait Parental Selection}
 \usage{
-ApproxMPS(B0, ETA, R, target, p, method = "kl")
+ApproxMPS(B0, ETA, R, p, method = "kl")
 }
 \arguments{
 \item{B0}{(vector) with the overall mean of each trait of length equal to number of traits (\eqn{t}).}
