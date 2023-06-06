@@ -4,7 +4,7 @@
 \alias{MPS}
 \title{Multitrait Parental Selection}
 \usage{
-MPS(Xcand, B0, B, R, p, method = "kl", verbose = FALSE)
+MPS(Xcand, B0, B, R, p, target = NULL, method = "kl", verbose = FALSE)
 }
 \arguments{
 \item{Xcand}{(a matrix) of predictors of candidates for selection of dimensions \eqn{n \times k}, where
@@ -21,6 +21,9 @@ components in the residual covariance matrix.}
 
 \item{p}{(escalar) the proportion of selected candidates.}
 
+\item{target}{(vector) of length equal to number of traits (\eqn{t}) reflecting
+the breeder's expectation. Default is NULL.}
+
 \item{method}{(string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
 
 \item{verbose}{(logical) if TRUE the iteration history is printed, default FALSE.}
@@ -35,20 +38,25 @@ multiLoss function to compute Kullback Leibler, Energy Score or Multivariate Ass
 \dontrun{
 # Clean and setting local environment
 rm(list = ls())
+
 setwd("Put your working directory here")
+
 # Loading needed packages
 library(MPS)
 library(BGLR)
+
 # Loading dataset
 data(wheat)
 Y <- as.matrix(wheat.Y)
 X <- scale(wheat.X, center=TRUE, scale = TRUE)
 n <- nrow(Y)
+
 # Just for example: parental population
 porc_parental <- 0.4
 idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
 XTrn <- X[-idPar,]
 YTrn <- Y[-idPar,]
+
 # ModelFit using BGLR
 ETA <- list(list(X = XTrn, model = "BRR", saveEffects = TRUE))
 model <- Multitrait(y = YTrn,
@@ -57,12 +65,14 @@ model <- Multitrait(y = YTrn,
                   resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = TRUE),
                   saveAt = paste0("./chains/", "BRR_"),
                   nIter = 50000,
-                 burnIn = 20000)
+                  burnIn = 20000)
+
 # Reading Posterior MCMC
 mu <- as.matrix(read.table(file = "./chains/BRR_mu.dat", header = FALSE))
 B <- readBinMatMultitrait('./chains/BRR_ETA_1_beta.bin')
 R <- as.matrix(read.table(file = "./chains/BRR_R.dat", header = FALSE))
 XPar <- X[idPar, ]
+
 # Evaluating Loss Function
 out <- MPS(Xcand = XPar,
            B0 = mu,
@@ -70,6 +80,7 @@ out <- MPS(Xcand = XPar,
            R = R,
            p = 0.1,
            method = "kl")
+
 # Plotting results
 colnames(out$yHat) <- colnames(Y)
 pairs(out$yHat,

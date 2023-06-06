@@ -7,6 +7,8 @@
 #'      \eqn{n} is the number of individuals in the candidate set.
 #' @param R (square matrix) of the residual covariance matrix of dimension \eqn{t \times t}.
 #' @param p (escalar) the proportion of selected candidates.
+#' @param target (vector) of length equal to number of traits (\eqn{t}) reflecting
+#'      the breeder's expectation. Default is NULL.
 #' @param method (string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
 #' @return A list of BVs, approximated expected loss and a logical vector that indicate what lines are selected.
 #' @references 
@@ -16,10 +18,13 @@
 #' \dontrun{
 #' # Clean and setting local environment
 #' rm(list = ls())
+#'
 #' setwd("Put your working directory here")
+#'
 #' # Loading needed packages
 #' library(MPS)
 #' library(BGLR)
+#'
 #' # Loading dataset
 #' data(wheat)
 #' Y <- as.matrix(wheat.Y)
@@ -54,23 +59,28 @@
 #'   col = ifelse(out$selected, "red", "darkgray"),
 #'   pch = ifelse(out$selected, 19, 1))
 #' }
-ApproxMPS <- function(B0, ETA, R, p, method = "kl"){
+ApproxMPS <- function(B0, ETA, R, p, target = NULL, method = "kl"){
 
   # Checking inputs
   if(!is.vector(B0)) stop("B0 must be a vector.\n")
   if(!is.matrix(ETA)) stop("ETA must be a matrix.\n")
   if(!is.matrix(R)) stop("R must be a matrix.\n")
-  # if(!is.numeric(target)) stop("target must be a real vector.\n")
   if(p <= 0 | p >= 1) stop("p should be a number between 0 and 1.\n")
   if(!(method %in% c("kl", "malf", "energy"))) stop("The method is not valid.\n")
 
   t <- length(B0)
   if(t < 2) stop("The number of traits must be at least two.\n")
-  # if(t != length(target)) stop("The length of target must be the same the number of traits.\n")
 
   # Start calculations
   desvEst <- sqrt(diag(R))
-  target <- B0 + 2*desvEst
+
+  # Target
+  if(is.null(target)){
+    target <- B0 + 2*desvEst
+  }else{
+    if(!is.numeric(target)) stop("target must be a real vector.\n")
+    if(t != length(target)) stop("The length of target must be the same the number of traits.\n")
+  }
 
   # mvtnorm::
   muS <- as.vector(mtmvnorm(lower = target,
@@ -93,8 +103,9 @@ ApproxMPS <- function(B0, ETA, R, p, method = "kl"){
   # Calculating posterior expected loss and Breeding values
   n <- nrow(ETA)
   nSelected <- ceiling(n*p)
+  ranking = rank(e.loss)
   selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
-  out <- list(method = method, loss = e.loss, yHat = data.frame(ETA), selected = ifelse(1:n %in% selected, TRUE, FALSE))
+  out <- list(method = method, loss = e.loss, ranking = ranking, selected = ifelse(1:n %in% selected, TRUE, FALSE), yHat = data.frame(ETA))
   class(out) <- "MPS"
   return(out)
 }

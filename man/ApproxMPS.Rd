@@ -4,7 +4,7 @@
 \alias{ApproxMPS}
 \title{Multitrait Parental Selection}
 \usage{
-ApproxMPS(B0, ETA, R, p, method = "kl")
+ApproxMPS(B0, ETA, R, p, target = NULL, method = "kl")
 }
 \arguments{
 \item{B0}{(vector) with the overall mean of each trait of length equal to number of traits (\eqn{t}).}
@@ -15,6 +15,9 @@ ApproxMPS(B0, ETA, R, p, method = "kl")
 \item{R}{(square matrix) of the residual covariance matrix of dimension \eqn{t \times t}.}
 
 \item{p}{(escalar) the proportion of selected candidates.}
+
+\item{target}{(vector) of length equal to number of traits (\eqn{t}) reflecting
+the breeder's expectation. Default is NULL.}
 
 \item{method}{(string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
 }
@@ -28,10 +31,13 @@ Approximate the Kullback Leibler, Energy Score or Multivariate Assymetric Loss.
 \dontrun{
 # Clean and setting local environment
 rm(list = ls())
+
 setwd("Put your working directory here")
+
 # Loading needed packages
 library(MPS)
 library(BGLR)
+
 # Loading dataset
 data(wheat)
 Y <- as.matrix(wheat.Y)
