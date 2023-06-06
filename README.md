@@ -1,7 +1,7 @@
 # MPS
 An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or Phenotypic Selection.
 
-## Installation desde GitHub:
+## Installation from GitHub:
 
 ```
 install.packages(pkg='devtools',repos='https://cran.r-project.org/')  #1 install devtools
