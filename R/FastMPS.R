@@ -83,8 +83,6 @@ FastMPS <- function(Xcand, B0, B, R, p, target = NULL, method = "kl"){
 
   t <- ncol(B0)
   if(t < 2) stop("The number of traits must be at least two.\n")
-  
-  suma = 2+2
 
   # Start calculations
   means <- colMeans(B0)
