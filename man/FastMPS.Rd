@@ -4,7 +4,7 @@
 \alias{FastMPS}
 \title{Multitrait Parental Selection}
 \usage{
-FastMPS(Xcand, B0, B, R, p, target = NULL, method = "kl")
+FastMPS(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean")
 }
 \arguments{
 \item{Xcand}{(a matrix) of predictors of candidates for selection of dimensions \eqn{n \times k}, where
@@ -19,12 +19,12 @@ linear model, where \eqn{M} is the number of markov chain monte carlo samples an
 \item{R}{(matrix) of dimension \eqn{M \times (t \times (t + 1) / 2)} of Markov Chain Monte Carlo samples of the variance-covariance
 components in the residual covariance matrix.}
 
-\item{p}{(escalar) the proportion of selected candidates.}
-
 \item{target}{(vector) of length equal to number of traits (\eqn{t}) reflecting
 the breeder's expectation. Default is NULL.}
 
-\item{method}{(string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
+\item{method}{(string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
+
+\item{measure}{(string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".}
 }
 \value{
 A list of BVs, posterior expected loss, ranking and a logical vector that indicate what lines are selected.
@@ -75,8 +75,8 @@ out <- FastMPS(Xcand = XPar,
                B0 = mu,
                B = B,
                R = R,
-               p = 0.1,
-               method = "kl")
+               method = "kl",
+               measure = "euclidean")
 
 # Plotting results
 colnames(out$yHat) <- colnames(Y)

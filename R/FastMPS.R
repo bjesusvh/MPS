@@ -10,10 +10,10 @@
 #' @param B (array) containing regression coeficients of dimension, \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.
 #' @param R (matrix) of dimension \eqn{M \times (t \times (t + 1) / 2)} of Markov Chain Monte Carlo samples of the variance-covariance
 #'     components in the residual covariance matrix.
-#' @param p (escalar) the proportion of selected candidates.
 #' @param target (vector) of length equal to number of traits (\eqn{t}) reflecting
 #'      the breeder's expectation. Default is NULL.
-#' @param method (string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
+#' @param method (string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
+#' @param measure (string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
 #' @return A list of BVs, posterior expected loss, ranking and a logical vector that indicate what lines are selected.
 #' @references 
 #'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
@@ -62,8 +62,8 @@
 #'                B0 = mu,
 #'                B = B,
 #'                R = R,
-#'                p = 0.1,
-#'                method = "kl")
+#'                method = "kl",
+#'                measure = "euclidean")
 #'
 #' # Plotting results
 #' colnames(out$yHat) <- colnames(Y)
@@ -71,15 +71,16 @@
 #'      col = ifelse(out$selected, "red", "darkgray"),
 #'      pch = ifelse(out$selected, 19, 1))
 #' }
-FastMPS <- function(Xcand, B0, B, R, p, target = NULL, method = "kl"){
+FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean"){
 
   # Checking inputs
   if(!is.matrix(Xcand)) stop("Xcand must be a matrix.\n")
   if(!is.matrix(B0)) stop("B0 must be a matrix.\n")
   if(!is.array(B)) stop("B must be an array.\n")
   if(!is.matrix(R)) stop("R must be a matrix.\n")
-  if(p <= 0 | p >= 1) stop("p should be a number between 0 and 1.\n")
+  # if(p <= 0 | p >= 1) stop("p should be a number between 0 and 1.\n")
   if(!(method %in% c("kl", "malf", "energy"))) stop("The method is not valid.\n")
+  if(!(measure %in% c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski"))) stop("The method is not valid.\n")
 
   t <- ncol(B0)
   if(t < 2) stop("The number of traits must be at least two.\n")
@@ -141,14 +142,17 @@ FastMPS <- function(Xcand, B0, B, R, p, target = NULL, method = "kl"){
 
   # Stop parallel backend
   stopCluster(cl)
+  
+  aveDistances <- aveDist(Xcand, measure)
 
   # Calculating posterior expected loss and Breeding values
-  nSelected <- ceiling(n*p)
+  # nSelected <- ceiling(n*p)
   e.loss <- apply(loss, 1, mean, na.rm = TRUE)
   ranking = rank(e.loss)
-  selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
+  # selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
+  # sel = ifelse(1:n %in% selected, TRUE, FALSE)
   yHat <- apply(mu_c, c(1,2), mean)
-  out <- list(method = method, loss = e.loss, ranking = ranking, selected = ifelse(1:n %in% selected, TRUE, FALSE), yHat = data.frame(yHat))
+  out <- list(method = method, loss = e.loss, ranking = ranking, aveDist = aveDistances, yHat = data.frame(yHat)) 
   class(out) <- "MPS"
   return(out)
 }
