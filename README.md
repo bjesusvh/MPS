@@ -4,9 +4,14 @@ An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or 
 ## Installation from GitHub:
 
 ```
-install.packages(pkg='devtools',repos='https://cran.r-project.org/')  #1 install devtools
-library(devtools)                                                     #2 load the library
-install_github('https://github.com/bjesusvh/MPS')                     #3 install MPS from GitHub
+#1 install devtools
+install.packages(pkg='devtools',repos='https://cran.r-project.org/')
+
+#2 load the library
+library(devtools)
+
+#3 install MPS from GitHub                                          
+install_github('https://github.com/bjesusvh/MPS')                     
 ```
 
 ## Examples
