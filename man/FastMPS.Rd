@@ -20,7 +20,7 @@ FastMPS(
 \eqn{n} is the number of individuals in the candidate set and \eqn{k} is the
 number of predictors.}
 
-\item{B0}{(matrix) of dimension \eqn{M \times t} for the intercept term in
+\item{B0}{(matrix) of dimension \eqn{M \times t} for the intercept term in the
 linear model, where \eqn{M} is the number of markov chain monte carlo samples and \eqn{t} is the number of traits.}
 
 \item{B}{(array) containing regression coeficients of dimension \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.}
