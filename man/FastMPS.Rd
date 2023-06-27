@@ -2,19 +2,28 @@
 % Please edit documentation in R/FastMPS.R
 \name{FastMPS}
 \alias{FastMPS}
-\title{Multitrait Parental Selection}
+\title{Fast Multitrait Parental Selection}
 \usage{
-FastMPS(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean")
+FastMPS(
+  Xcand,
+  B0,
+  B,
+  R,
+  target = NULL,
+  method = "kl",
+  measure = "euclidean",
+  verbose = FALSE
+)
 }
 \arguments{
-\item{Xcand}{(a matrix) of predictors of candidates for selection of dimensions \eqn{n \times k}, where
+\item{Xcand}{(a matrix) of predictors of the candidates for selection. Dimensions \eqn{n \times k}, where
 \eqn{n} is the number of individuals in the candidate set and \eqn{k} is the
 number of predictors.}
 
 \item{B0}{(matrix) of dimension \eqn{M \times t} for the intercept term in
 linear model, where \eqn{M} is the number of markov chain monte carlo samples and \eqn{t} is the number of traits.}
 
-\item{B}{(array) containing regression coeficients of dimension, \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.}
+\item{B}{(array) containing regression coeficients of dimension \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.}
 
 \item{R}{(matrix) of dimension \eqn{M \times (t \times (t + 1) / 2)} of Markov Chain Monte Carlo samples of the variance-covariance
 components in the residual covariance matrix.}
@@ -27,10 +36,10 @@ the breeder's expectation. Default is NULL.}
 \item{measure}{(string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".}
 }
 \value{
-A list of BVs, posterior expected loss, ranking and a logical vector that indicate what lines are selected.
+A list with Breeding values, posterior expected loss, ranking, and average distance for each candidate of selection.
 }
 \description{
-Parallelized multiLoss function to compute Kullback Leibler, Energy Score or Multivariate Assymetric Loss in Multitrait Parental Selection.
+Parallelized function for computing Kullback-Leibler, Energy Score, or Multivariate Asymmetric Loss in Multitrait Parental Selection.
 }
 \examples{
 \dontrun{
@@ -87,4 +96,6 @@ pairs(out$yHat,
 }
 \references{
 Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
+   
+   Villar-Hernández, B.J., et.al. (2021). Application of multi-trait Bayesian decision theory for parental genomic selection. 11(2). 1-14
 }

@@ -1,22 +1,24 @@
-#' Multitrait Parental Selection
+#' Fast Multitrait Parental Selection
 #'
-#' Parallelized multiLoss function to compute Kullback Leibler, Energy Score or Multivariate Assymetric Loss in Multitrait Parental Selection.
+#' Parallelized function for computing Kullback-Leibler, Energy Score, or Multivariate Asymmetric Loss in Multitrait Parental Selection.
 #'
-#' @param Xcand (a matrix) of predictors of candidates for selection of dimensions \eqn{n \times k}, where
+#' @param Xcand (a matrix) of predictors of the candidates for selection. Dimensions \eqn{n \times k}, where
 #'      \eqn{n} is the number of individuals in the candidate set and \eqn{k} is the
 #'      number of predictors.
 #' @param B0 (matrix) of dimension \eqn{M \times t} for the intercept term in
 #'      linear model, where \eqn{M} is the number of markov chain monte carlo samples and \eqn{t} is the number of traits.
-#' @param B (array) containing regression coeficients of dimension, \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.
+#' @param B (array) containing regression coeficients of dimension \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.
 #' @param R (matrix) of dimension \eqn{M \times (t \times (t + 1) / 2)} of Markov Chain Monte Carlo samples of the variance-covariance
 #'     components in the residual covariance matrix.
 #' @param target (vector) of length equal to number of traits (\eqn{t}) reflecting
 #'      the breeder's expectation. Default is NULL.
 #' @param method (string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
 #' @param measure (string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
-#' @return A list of BVs, posterior expected loss, ranking and a logical vector that indicate what lines are selected.
+#' @return A list with Breeding values, posterior expected loss, ranking, and average distance for each candidate of selection.
 #' @references 
 #'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
+#'    
+#'    Villar-Hernández, B.J., et.al. (2021). Application of multi-trait Bayesian decision theory for parental genomic selection. 11(2). 1-14
 #' @export
 #'
 #' @examples
@@ -71,7 +73,7 @@
 #'      col = ifelse(out$selected, "red", "darkgray"),
 #'      pch = ifelse(out$selected, 19, 1))
 #' }
-FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean"){
+FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean", verbose = FALSE){
 
   # Checking inputs
   if(!is.matrix(Xcand)) stop("Xcand must be a matrix.\n")
@@ -146,13 +148,15 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "eu
   aveDistances <- aveDist(Xcand, measure)
 
   # Calculating posterior expected loss and Breeding values
-  # nSelected <- ceiling(n*p)
+  ## nSelected <- ceiling(n*p)
+  ## selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
+  ## sel = ifelse(1:n %in% selected, TRUE, FALSE)
+  
   e.loss <- apply(loss, 1, mean, na.rm = TRUE)
-  ranking = rank(e.loss)
-  # selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
-  # sel = ifelse(1:n %in% selected, TRUE, FALSE)
+  ranking <- rank(e.loss)
   yHat <- apply(mu_c, c(1,2), mean)
-  out <- list(method = method, loss = e.loss, ranking = ranking, aveDist = aveDistances, yHat = data.frame(yHat)) 
+  out <- list(method = method, loss = e.loss, ranking = ranking, aveDist = aveDistances, yHat = data.frame(yHat))
   class(out) <- "MPS"
+  
   return(out)
 }

@@ -2,9 +2,9 @@
 % Please edit documentation in R/ApproxMPG.R
 \name{ApproxMPS}
 \alias{ApproxMPS}
-\title{Multitrait Parental Selection}
+\title{Approximation in Multitrait Parental Selection}
 \usage{
-ApproxMPS(B0, ETA, R, p, target = NULL, method = "kl")
+ApproxMPS(B0, ETA, R, target = NULL, method = "kl")
 }
 \arguments{
 \item{B0}{(vector) with the overall mean of each trait of length equal to number of traits (\eqn{t}).}
@@ -14,15 +14,13 @@ ApproxMPS(B0, ETA, R, p, target = NULL, method = "kl")
 
 \item{R}{(square matrix) of the residual covariance matrix of dimension \eqn{t \times t}.}
 
-\item{p}{(escalar) the proportion of selected candidates.}
-
 \item{target}{(vector) of length equal to number of traits (\eqn{t}) reflecting
 the breeder's expectation. Default is NULL.}
 
-\item{method}{(string) indicate the loss function to use. Posible values are "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
+\item{method}{(string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
 }
 \value{
-A list of BVs, approximated expected loss and a logical vector that indicate what lines are selected.
+A list with Breeding values, posterior expected loss, and ranking for each candidate of selection.
 }
 \description{
 Approximate the Kullback Leibler, Energy Score or Multivariate Assymetric Loss.
@@ -75,4 +73,6 @@ pairs(out$yHat,
 }
 \references{
 Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
+   
+   Villar-Hernández, B.J., et.al. (2021). Application of multi-trait Bayesian decision theory for parental genomic selection. 11(2). 1-14
 }
