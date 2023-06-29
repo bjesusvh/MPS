@@ -9,6 +9,7 @@
 #' @param target (vector) of length equal to number of traits (\eqn{t}) reflecting
 #'      the breeder's expectation. Default is NULL.
 #' @param method (string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
+#' @param A (matrix) pedigree information of dimension \eqn{n \times n}.
 #' @return A list with Breeding values, posterior expected loss, and ranking for each candidate of selection.
 #' @references 
 #'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
@@ -60,7 +61,7 @@
 #'   col = ifelse(out$selected, "red", "darkgray"),
 #'   pch = ifelse(out$selected, 19, 1))
 #' }
-ApproxMPS <- function(B0, ETA, R, target = NULL, method = "kl"){
+ApproxMPS <- function(B0, ETA, R, target = NULL, method = "kl", A = NULL){
 
   # Checking inputs
   if(!is.vector(B0)) stop("B0 must be a vector.\n")
@@ -100,6 +101,13 @@ ApproxMPS <- function(B0, ETA, R, target = NULL, method = "kl"){
     tau <- rep(0.95, t)
     e.loss <- aproxMALF(ETA, muS, tau)
   }
+  
+  # Calculating similarities
+  if(!is.null(A)){
+    aveSimilarities <- aveSim(A)
+  }else{
+    aveSimilarities <- NULL
+  }
 
   # Calculating posterior expected loss and Breeding values
   # n <- nrow(ETA)
@@ -107,7 +115,7 @@ ApproxMPS <- function(B0, ETA, R, target = NULL, method = "kl"){
   ranking <- rank(e.loss)
   # selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
   # selected = ifelse(1:n %in% selected, TRUE, FALSE)
-  out <- list(method = method, loss = e.loss, ranking = ranking, yHat = data.frame(ETA))
+  out <- list(method = method, loss = e.loss, ranking = ranking, aveSim = aveSimilarities, yHat = data.frame(ETA))
   class(out) <- "MPS"
   return(out)
 }
