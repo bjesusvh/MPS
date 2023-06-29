@@ -32,42 +32,25 @@ X <- scale(wheat.X, center=TRUE, scale = TRUE)
 n <- nrow(Y)
 
 # Just for example
-set.seed(384)
+set.seed(647) # for reproducibility
 porc_parental <- 0.4
 idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
 XTrn <- X[-idPar,]
 YTrn <- Y[-idPar,]
-
-# ModelFit using BGLR
-ETA <- list(list(X = XTrn, model = "BRR", saveEffects = TRUE))
-model <- Multitrait(y = YTrn,
-  ETA = ETA,
-  intercept = TRUE,
-  resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = TRUE),
-  saveAt = paste0("./chains/", "BRR_"),
-  nIter = 100000,
-  burnIn = 30000)
-
-# Reading Posterior MCMC
-mu <- as.matrix(read.table(file = "./chains/BRR_mu.dat", header = FALSE))
-B <- readBinMatMultitrait('./chains/BRR_ETA_1_beta.bin')
-R <- as.matrix(read.table(file = "./chains/BRR_R.dat", header = FALSE))
 XPar <- X[idPar, ]
 
+# Model fitting using BGLR
+ETA <- list(list(X = XTrn, model = "BRR", saveEffects = TRUE))
+model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,
+  resCov = list(type = "UN", saveEffects = TRUE), nIter = 100000, burnIn = 30000)
+
+# Reading Posterior MCMC
+B0 <- as.matrix(read.table(file = "mu.dat", header = FALSE))
+B <- readBinMatMultitrait('ETA_1_beta.bin')
+R <- as.matrix(read.table(file = "R.dat", header = FALSE))
 
 # Evaluating Loss Function
-out <- FastMPS(Xcand = XPar,
-          B0 = mu,
-          B = B,
-          R = R,
-          p = 0.1,
-          method = "kl")
-
-# Plotting results
-colnames(out$yHat) <- colnames(Y)
-pairs(out$yHat,
-  col = ifelse(out$selected, "#2c7fb8", "darkgray"),
-  pch = ifelse(out$selected, 19, 1))
+out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
 ```
 
 
