@@ -149,6 +149,7 @@ EvalMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "eu
   }
 
   # Average distances
+  if(is.null(measure)){ measure = "euclidean"}
   aveDistances <- aveDist(Xcand, measure)
 
   # Calculating posterior expected loss and Breeding values

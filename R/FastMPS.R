@@ -73,7 +73,7 @@
 #'      col = ifelse(out$selected, "red", "darkgray"),
 #'      pch = ifelse(out$selected, 19, 1))
 #' }
-FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean", verbose = FALSE){
+FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean"){
 
   # Checking inputs
   if(!is.matrix(Xcand)) stop("Xcand must be a matrix.\n")
@@ -145,6 +145,8 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "eu
   # Stop parallel backend
   stopCluster(cl)
   
+  # Average distances
+  if(is.null(measure)){ measure = "euclidean"}
   aveDistances <- aveDist(Xcand, measure)
 
   # Calculating posterior expected loss and Breeding values
