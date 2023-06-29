@@ -101,7 +101,7 @@ aproxMALF <- function(mu2, muS, tau){
 
 ## Average distances (when using Markers data)
 aveDist <- function(Xcand, measure){ 
-  D <- as.matrix(dist(XPar, method = measure))
+  D <- as.matrix(dist(Xcand, method = measure))
   # Computations
   upper_tri <- upper.tri(D)
   indices <- which(upper_tri, arr.ind = TRUE)
