@@ -55,7 +55,7 @@
 #' R <- as.matrix(read.table(file = "R.dat", header = FALSE))
 #' 
 #' # Evaluating Loss Function
-#' out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
+#' out <- EvalMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
 #' 
 #' # Get average distances for each candidate
 #' d <- getDist(XPar)
