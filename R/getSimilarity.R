@@ -6,6 +6,13 @@
 #'      \eqn{n} is the number of individuals in the candidate set.
 #' @return A vector with average similarities for each candidate of selection.
 #' @export 
+#'
+#' @examples
+#' \dontrun{
+#' X <- matrix(rbinom(25, 1, p=0.4), nrow = 5, ncol = 5)
+#' G <- tcrossprod(X)
+#' getSim(G)
+#' }
 getSim <- function(K){ 
   
   if(dim(K)[1] != dim(K)[2]) stop("K should be a square matrix.")

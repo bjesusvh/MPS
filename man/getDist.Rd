@@ -19,3 +19,9 @@ A vector with average distance for each candidate of selection.
 \description{
 Get average distance for each candidate of selection
 }
+\examples{
+\dontrun{
+X <- matrix(rbinom(25, 1, p=0.4), nrow = 5, ncol = 5)
+getDist(X)
+}
+}

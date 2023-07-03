@@ -8,6 +8,12 @@
 #' @param measure (string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
 #' @return A vector with average distance for each candidate of selection.
 #' @export 
+#'
+#' @examples
+#' \dontrun{
+#' X <- matrix(rbinom(25, 1, p=0.4), nrow = 5, ncol = 5)
+#' getDist(X)
+#' }
 getDist <- function(Xcand, measure = "euclidean"){ 
   
   if(!(measure %in% c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski"))) stop("The method is not valid.\n")
