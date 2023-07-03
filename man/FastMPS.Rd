@@ -32,7 +32,43 @@ Parallelized function for computing Kullback-Leibler, Energy Score, or Multivari
 }
 \examples{
 \dontrun{
+# Cleaning and setting local environment
+rm(list = ls())
+setwd("Put your working directory")
+library(MPS)
+library(BGLR)
+# Loading dataset
+data(wheat)
+Y <- as.matrix(wheat.Y)
+X <- scale(wheat.X, center=TRUE, scale = TRUE)
+n <- nrow(Y)
+# Just for example
+set.seed(647) # for reproducibility
+porc_parental <- 0.4
+idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
+XTrn <- X[-idPar,]
+YTrn <- Y[-idPar,]
+XPar <- X[idPar, ]
 
+# Model fitting using BGLR
+ETA <- list(list(X = XTrn, model = "BRR", saveEffects = TRUE))
+model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,
+                    resCov = list(type = "UN", saveEffects = TRUE), nIter = 100000, burnIn = 30000)
+
+# Reading Posterior MCMC
+B0 <- as.matrix(read.table(file = "mu.dat", header = FALSE))
+B <- readBinMatMultitrait('ETA_1_beta.bin')
+R <- as.matrix(read.table(file = "R.dat", header = FALSE))
+
+# Evaluating Loss Function
+out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
+
+# Get average distances for each candidate
+d <- getDist(XPar)
+
+## Plotting similarity
+library(utilidades) # install_github('bjesusvh/utilidades')
+plotMPS(MPSObject = out, Dist = d, qLoss = 0.25, qDistance = 0.25)
 }
 }
 \references{
