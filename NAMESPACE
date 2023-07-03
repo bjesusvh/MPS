@@ -3,3 +3,5 @@
 export(ApproxMPS)
 export(EvalMPS)
 export(FastMPS)
+export(getDist)
+export(getSim)

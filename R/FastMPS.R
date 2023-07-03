@@ -13,8 +13,7 @@
 #' @param target (vector) of length equal to number of traits (\eqn{t}) reflecting
 #'      the breeder's expectation. Default is NULL.
 #' @param method (string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
-#' @param measure (string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
-#' @return A list with Breeding values, posterior expected loss, ranking, and average distance for each candidate of selection.
+#' @return A list with Breeding values, posterior expected loss, and the rank for each candidate of selection.
 #' @references 
 #'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
 #'    
@@ -23,57 +22,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Clean and setting local environment
-#' rm(list = ls())
 #'
-#' setwd("Put your working directory here")
-#' 
-#' # Loading needed packages
-#' library(MPS)
-#' library(BGLR)
-#'
-#' # Loading dataset
-#' data(wheat)
-#' Y <- as.matrix(wheat.Y)
-#' X <- scale(wheat.X, center=TRUE, scale = TRUE)
-#' n <- nrow(Y)
-#' # Just for example: parental population
-#' porc_parental <- 0.4
-#' idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
-#' XTrn <- X[-idPar,]
-#' YTrn <- Y[-idPar,]
-#'
-#' # ModelFit using BGLR
-#' ETA <- list(list(X = XTrn, model = "BRR", saveEffects = TRUE))
-#' model <- Multitrait(y = YTrn,
-#'                   ETA = ETA,
-#'                   intercept = TRUE,
-#'                   resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = TRUE),
-#'                   saveAt = paste0("./chains/", "BRR_"),
-#'                   nIter = 50000,
-#'                   burnIn = 20000)
-#'
-#' # Reading Posterior MCMC
-#' mu <- as.matrix(read.table(file = "./chains/BRR_mu.dat", header = FALSE))
-#' B <- readBinMatMultitrait('./chains/BRR_ETA_1_beta.bin')
-#' R <- as.matrix(read.table(file = "./chains/BRR_R.dat", header = FALSE))
-#' XPar <- X[idPar, ]
-#'
-#' # Evaluating Loss Function
-#' out <- FastMPS(Xcand = XPar,
-#'                B0 = mu,
-#'                B = B,
-#'                R = R,
-#'                method = "kl",
-#'                measure = "euclidean")
-#'
-#' # Plotting results
-#' colnames(out$yHat) <- colnames(Y)
-#' pairs(out$yHat,
-#'      col = ifelse(out$selected, "red", "darkgray"),
-#'      pch = ifelse(out$selected, 19, 1))
 #' }
-FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "euclidean"){
+FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl"){
 
   # Checking inputs
   if(!is.matrix(Xcand)) stop("Xcand must be a matrix.\n")
@@ -82,7 +33,6 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "eu
   if(!is.matrix(R)) stop("R must be a matrix.\n")
   # if(p <= 0 | p >= 1) stop("p should be a number between 0 and 1.\n")
   if(!(method %in% c("kl", "malf", "energy"))) stop("The method is not valid.\n")
-  if(!(measure %in% c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski"))) stop("The method is not valid.\n")
 
   t <- ncol(B0)
   if(t < 2) stop("The number of traits must be at least two.\n")
@@ -144,10 +94,6 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "eu
 
   # Stop parallel backend
   stopCluster(cl)
-  
-  # Average distances
-  if(is.null(measure)){ measure = "euclidean"}
-  aveDistances <- aveDist(Xcand, measure)
 
   # Calculating posterior expected loss and Breeding values
   ## nSelected <- ceiling(n*p)
@@ -157,7 +103,7 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", measure = "eu
   e.loss <- apply(loss, 1, mean, na.rm = TRUE)
   ranking <- rank(e.loss)
   yHat <- apply(mu_c, c(1,2), mean)
-  out <- list(method = method, loss = e.loss, ranking = ranking, aveDist = aveDistances, yHat = data.frame(yHat))
+  out <- list(method = method, loss = e.loss, ranking = ranking, yHat = data.frame(yHat))
   class(out) <- "MPS"
   
   return(out)

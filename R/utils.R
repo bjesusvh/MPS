@@ -97,44 +97,6 @@ aproxMALF <- function(mu2, muS, tau){
   loss <- sum.abs.e + as.vector(error %*% tau)
 }
 
-### Distances and Similarities
-
-## Average distances (when using Markers data)
-aveDist <- function(Xcand, measure){ 
-  D <- as.matrix(dist(Xcand, method = measure))
-  # Computations
-  upper_tri <- upper.tri(D)
-  indices <- which(upper_tri, arr.ind = TRUE)
-  values <- D[indices]
-  df <- data.frame(row = indices[, 1], 
-                   col = indices[, 2],
-                   value = values)
-  # Mean values
-  rel1 <- tapply(df$value, INDEX = factor(df$row), FUN = mean)
-  rel2 <- tapply(df$value, INDEX = factor(df$col), FUN = mean)
-  AverageDistances <- c(rel1, rel2[length(rel2)])
-  return(aveDist = AverageDistances)
-}
-
-
-## Average similarities (when using Pedigree data)
-aveSim <- function(K){ 
-  # Computations
-  upper_tri <- upper.tri(K)
-  indices <- which(upper_tri, arr.ind = TRUE)
-  values <- K[indices]
-  df <- data.frame(row = indices[, 1], 
-                   col = indices[, 2],
-                   value = values)
-  # Mean values
-  rel1 <- tapply(df$value, INDEX = factor(df$row), FUN = mean)
-  rel2 <- tapply(df$value, INDEX = factor(df$col), FUN = mean)
-  AverageSim <- c(rel1, rel2[length(rel2)])
-  return(aveSim = AverageSim)
-}
-
-
-
 
 # # Univariate loss functions
 # single_KL <- function(){

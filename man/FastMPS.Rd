@@ -4,16 +4,7 @@
 \alias{FastMPS}
 \title{Fast Multitrait Parental Selection}
 \usage{
-FastMPS(
-  Xcand,
-  B0,
-  B,
-  R,
-  target = NULL,
-  method = "kl",
-  measure = "euclidean",
-  verbose = FALSE
-)
+FastMPS(Xcand, B0, B, R, target = NULL, method = "kl")
 }
 \arguments{
 \item{Xcand}{(a matrix) of predictors of the candidates for selection. Dimensions \eqn{n \times k}, where
@@ -32,66 +23,16 @@ components in the residual covariance matrix.}
 the breeder's expectation. Default is NULL.}
 
 \item{method}{(string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
-
-\item{measure}{(string) the distance measure to be used to calculate average distances between lines. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".}
 }
 \value{
-A list with Breeding values, posterior expected loss, ranking, and average distance for each candidate of selection.
+A list with Breeding values, posterior expected loss, and the rank for each candidate of selection.
 }
 \description{
 Parallelized function for computing Kullback-Leibler, Energy Score, or Multivariate Asymmetric Loss in Multitrait Parental Selection.
 }
 \examples{
 \dontrun{
-# Clean and setting local environment
-rm(list = ls())
 
-setwd("Put your working directory here")
-
-# Loading needed packages
-library(MPS)
-library(BGLR)
-
-# Loading dataset
-data(wheat)
-Y <- as.matrix(wheat.Y)
-X <- scale(wheat.X, center=TRUE, scale = TRUE)
-n <- nrow(Y)
-# Just for example: parental population
-porc_parental <- 0.4
-idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
-XTrn <- X[-idPar,]
-YTrn <- Y[-idPar,]
-
-# ModelFit using BGLR
-ETA <- list(list(X = XTrn, model = "BRR", saveEffects = TRUE))
-model <- Multitrait(y = YTrn,
-                  ETA = ETA,
-                  intercept = TRUE,
-                  resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = TRUE),
-                  saveAt = paste0("./chains/", "BRR_"),
-                  nIter = 50000,
-                  burnIn = 20000)
-
-# Reading Posterior MCMC
-mu <- as.matrix(read.table(file = "./chains/BRR_mu.dat", header = FALSE))
-B <- readBinMatMultitrait('./chains/BRR_ETA_1_beta.bin')
-R <- as.matrix(read.table(file = "./chains/BRR_R.dat", header = FALSE))
-XPar <- X[idPar, ]
-
-# Evaluating Loss Function
-out <- FastMPS(Xcand = XPar,
-               B0 = mu,
-               B = B,
-               R = R,
-               method = "kl",
-               measure = "euclidean")
-
-# Plotting results
-colnames(out$yHat) <- colnames(Y)
-pairs(out$yHat,
-     col = ifelse(out$selected, "red", "darkgray"),
-     pch = ifelse(out$selected, 19, 1))
 }
 }
 \references{
