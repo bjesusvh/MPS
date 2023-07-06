@@ -39,8 +39,8 @@ multi_KL <- function(lower, upper, mu1, mu2, muS, K, Kinv){
 
   Z <- as.numeric(pmvnorm(lower = lower, upper = upper, mean = mu1, sigma = K)) # mvtnorm::
 
-  if(Z <= 0){
-    logZ = log(1e-300)
+  if(Z < 1e-323){
+    logZ = log(1e-323)
   }else{
       logZ = log(Z)
   }
@@ -48,9 +48,9 @@ multi_KL <- function(lower, upper, mu1, mu2, muS, K, Kinv){
   yppdf <- as.matrix(t(apply(mu2, 1, function(ypred) {mvrnormR(1, mu = ypred, sigma = K)})))
 
   S <- muS - mu1
-  SKS <- as.numeric( t(S) %*% Kinv %*% S)
-  muSmu2 <-  sweep(yppdf, 2, muS, '-')  # muS - mu2
-  loss <- as.vector(apply(muSmu2, 1, function(x) {0.5*(t(x) %*% Kinv %*% x - SKS) - logZ}))
+  SKS <- as.numeric( t(S) %*% Kinv %*% S)   # S Pinv S
+  muSmu2 <-  sweep(yppdf, 2, muS, '-')      # muS - mu2
+  loss <- as.vector(apply(muSmu2, 1, function(x) {0.5*(t(x) %*% Kinv %*% x - SKS)}) - logZ)
 
   return(loss)
 }
@@ -78,11 +78,15 @@ MALF <- function(mu2, muS, K, tau){
 # Aproximation of multivariate loss functions.
 aproxMultiKL <- function(lower, upper, mu1, mu2, muS, K, Kinv){
   Z <- as.numeric(pmvnorm(lower = lower, upper = upper, mean = mu1, sigma = K))
-  if(Z <= 0){ logZ = log(1e-300)}else{logZ = log(Z) }
+  if(Z < 1e-323){
+    logZ = log(1e-323)
+  }else{
+    logZ = log(Z)
+  }
   S <- muS - mu1
   SKS <- as.numeric( t(S) %*% Kinv %*% S)
   muSmu2 <-  sweep(mu2, 2, muS, '-')  # muS - mu2
-  loss <- as.vector(apply(muSmu2, 1, function(x) {0.5*(t(x) %*% Kinv %*% x - SKS) - logZ}))
+  loss <- as.vector(apply(muSmu2, 1, function(x) {0.5*(t(x) %*% Kinv %*% x - SKS)}) - logZ)
 }
 
 aproxEnergyScore <- function(mu2, muS){
