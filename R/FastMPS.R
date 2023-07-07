@@ -77,9 +77,14 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", direction = N
 
   t <- ncol(B0)
   if(t < 2) stop("The number of traits must be at least two.\n")
-  if(t != length(direction)) stop("The length of direction must be the same the number of traits.\n")
-  if(!(sum(direction %in% c(-1,1)) == t)) stop("Direction should be -1 or 1.\n")
-  if(is.null(direction)){direction <- rep(1, t)}
+
+  if(is.null(direction)){
+    direction <- rep(1, t)
+  }else{
+    if(t != length(direction)) stop("The length of direction must be the same the number of traits.\n")
+    if(!(sum(direction %in% c(-1,1)) == t)) stop("Direction should be -1 or 1.\n")
+  }
+  
 
   # Start calculations
   means <- colMeans(B0)
