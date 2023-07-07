@@ -2,7 +2,7 @@
 
 ## Calculate posterior BV in the form of mcmc samples.
 ## X A matrix of predictors of dimension n x k .
-## Beta An array of mcmc samples for regression coeficients, M x k x t.
+## B An array of mcmc samples for regression coeficients, M x k (predictors) x t.
 ## B0 A matrix of mcmc samples of M x t for intercept term in linear model.
 ## return An array of BVs in form of mcmc samples of dimension n x t x M
 posteriorBV <- function(Xcand, B, B0){

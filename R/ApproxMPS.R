@@ -9,6 +9,9 @@
 #' @param target (vector) of length equal to number of traits (\eqn{t}) reflecting
 #'      the breeder's expectation. Default is NULL.
 #' @param method (string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
+#' @param direction A vector of length equal to number of traits (\eqn{t}) reflecting the direction
+#'     of improvement desired, 1 for increase goal, -1 for decreasing goal.
+#'     Default is 1 (increase) for all traits.
 #' @return A list with Breeding values, expected loss, and the rank for each candidate of selection.
 #' @references 
 #'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
@@ -19,7 +22,7 @@
 #' \dontrun{
 #'
 #' }
-ApproxMPS <- function(B0, yHat, R, target = NULL, method = "kl"){
+ApproxMPS <- function(B0, yHat, R, target = NULL, method = "kl", direction = NULL){
 
   # Checking inputs
   if(!is.vector(B0)) stop("B0 must be a vector.\n")
@@ -30,13 +33,16 @@ ApproxMPS <- function(B0, yHat, R, target = NULL, method = "kl"){
 
   t <- length(B0)
   if(t < 2) stop("The number of traits must be at least two.\n")
+  if(t != length(direction)) stop("The length of direction must be the same the number of traits.\n")
+  if(!(sum(direction %in% c(-1,1)) == t)) stop("Direction should be -1 or 1.\n")
+  if(is.null(direction)){direction <- rep(1, t)}
 
   # Start calculations
   desvEst <- sqrt(diag(R))
 
   # Target
   if(is.null(target)){
-    target <- B0 + 2*desvEst
+    target <- B0 + (2*desvEst*direction)
   }else{
     if(!is.numeric(target)) stop("target must be a real vector.\n")
     if(t != length(target)) stop("The length of target must be the same the number of traits.\n")

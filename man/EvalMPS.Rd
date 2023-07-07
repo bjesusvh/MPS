@@ -4,7 +4,16 @@
 \alias{EvalMPS}
 \title{Multitrait Parental Selection}
 \usage{
-EvalMPS(Xcand, B0, B, R, target = NULL, method = "kl", verbose = FALSE)
+EvalMPS(
+  Xcand,
+  B0,
+  B,
+  R,
+  target = NULL,
+  method = "kl",
+  direction = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{Xcand}{(a matrix) of predictors of the candidates for selection. Dimensions \eqn{n \times k}, where
@@ -22,10 +31,13 @@ components in the residual covariance matrix.}
 \item{target}{(vector) of length equal to number of traits (\eqn{t}) reflecting
 the breeder's expectation. Default is NULL.}
 
-\item{method}{(string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".
-verbose}
+\item{method}{(string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
 
-\item{vebose}{(logical) if TRUE the iteration history is printed, default FALSE}
+\item{direction}{A vector of length equal to number of traits (\eqn{t}) reflecting the direction
+of improvement desired, 1 for increase goal, -1 for decreasing goal.
+Default is 1 (increase) for all traits.}
+
+\item{verbose}{(logical) if TRUE the iteration history is printed, default FALSE}
 }
 \value{
 A list with Breeding values, posterior expected loss, and the rank for each candidate of selection.

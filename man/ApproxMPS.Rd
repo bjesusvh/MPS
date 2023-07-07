@@ -4,7 +4,7 @@
 \alias{ApproxMPS}
 \title{Approximation in Multitrait Parental Selection}
 \usage{
-ApproxMPS(B0, yHat, R, target = NULL, method = "kl")
+ApproxMPS(B0, yHat, R, target = NULL, method = "kl", direction = NULL)
 }
 \arguments{
 \item{B0}{(vector) with the overall mean of each trait of length equal to number of traits (\eqn{t}).}
@@ -18,6 +18,10 @@ ApproxMPS(B0, yHat, R, target = NULL, method = "kl")
 the breeder's expectation. Default is NULL.}
 
 \item{method}{(string) the loss function to be used. This must be one of "kl" for Kullback-Leibler, "energy" for Energy Score and "malf" for Multivariate Assymetric Loss. Default is "kl".}
+
+\item{direction}{A vector of length equal to number of traits (\eqn{t}) reflecting the direction
+of improvement desired, 1 for increase goal, -1 for decreasing goal.
+Default is 1 (increase) for all traits.}
 }
 \value{
 A list with Breeding values, expected loss, and the rank for each candidate of selection.
