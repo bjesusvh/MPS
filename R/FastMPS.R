@@ -72,7 +72,6 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", direction = N
   if(!is.matrix(B0)) stop("B0 must be a matrix.\n")
   if(!is.array(B)) stop("B must be an array.\n")
   if(!is.matrix(R)) stop("R must be a matrix.\n")
-  # if(p <= 0 | p >= 1) stop("p should be a number between 0 and 1.\n")
   if(!(method %in% c("kl", "malf", "energy"))) stop("The method is not valid.\n")
 
   t <- ncol(B0)

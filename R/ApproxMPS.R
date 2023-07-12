@@ -28,7 +28,6 @@ ApproxMPS <- function(B0, yHat, R, target = NULL, method = "kl", direction = NUL
   if(!is.vector(B0)) stop("B0 must be a vector.\n")
   if(!is.matrix(yHat)) stop("yHat must be a matrix.\n")
   if(!is.matrix(R)) stop("R must be a matrix.\n")
-  # if(p <= 0 | p >= 1) stop("p should be a number between 0 and 1.\n")
   if(!(method %in% c("kl", "malf", "energy"))) stop("The method is not valid.\n")
 
   t <- length(B0)
