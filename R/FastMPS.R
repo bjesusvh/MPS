@@ -149,6 +149,7 @@ FastMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", direction = N
   ## sel = ifelse(1:n %in% selected, TRUE, FALSE)
   
   e.loss <- apply(loss, 1, mean, na.rm = TRUE)
+  e.loss <- (e.loss - min(e.loss)) / (max(e.loss) - min(e.loss))
   ranking <- rank(e.loss)
   yHat <- apply(mu_c, c(1,2), mean)
   out <- list(method = method, loss = e.loss, ranking = ranking, yHat = data.frame(yHat))

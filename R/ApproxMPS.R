@@ -72,6 +72,7 @@ ApproxMPS <- function(B0, yHat, R, target = NULL, method = "kl", direction = NUL
   # n <- nrow(yHat)
   # nSelected <- ceiling(n*p)
   ranking <- rank(e.loss)
+  e.loss <- (e.loss - min(e.loss)) / (max(e.loss) - min(e.loss))
   # selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
   # selected = ifelse(1:n %in% selected, TRUE, FALSE)
   out <- list(method = method, loss = e.loss, ranking = ranking, yHat = data.frame(yHat))

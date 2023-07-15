@@ -148,6 +148,7 @@ EvalMPS <- function(Xcand, B0, B, R, target = NULL, method = "kl", direction = N
   # Calculating posterior expected loss and Breeding values
   # nSelected <- ceiling(n*p)
   e.loss <- apply(loss, 1, mean, na.rm = TRUE)
+  e.loss <- (e.loss - min(e.loss)) / (max(e.loss) - min(e.loss))
   ranking <- rank(e.loss)
   # selected <- order(e.loss, decreasing = FALSE)[1:nSelected]
   # selected <- ifelse(1:n %in% selected, TRUE, FALSE)
