@@ -15,5 +15,5 @@ number of predictors.}
 A squared matrix of dimension \eqn{n \times n} with proportion of shared alleles with relatives for each candidate of selection.
 }
 \description{
-Get average shared alleles with relatives for each candidate of selection
+Get average shared alleles of each candidate with the rest of candidates
 }

@@ -1,6 +1,6 @@
 #' Get average shared alleles with relatives
 #'
-#' Get average shared alleles with relatives for each candidate of selection
+#' Get average shared alleles of each candidate with the rest of candidates
 #'
 #' @param Xcand (a matrix) of predictors of the candidates for selection. Dimensions \eqn{n \times k}, where
 #'      \eqn{n} is the number of individuals in the candidate set and \eqn{k} is the

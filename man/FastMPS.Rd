@@ -14,7 +14,7 @@ number of predictors.}
 \item{B0}{(matrix) of dimension \eqn{M \times t} for the intercept term in the
 linear model, where \eqn{M} is the number of markov chain monte carlo samples and \eqn{t} is the number of traits.}
 
-\item{B}{(array) containing regression coeficients of dimension \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.}
+\item{B}{(array) containing regression coefficients of dimension \eqn{M \times k \times t} of Markov Chain Monte Carlo samples.}
 
 \item{R}{(matrix) of dimension \eqn{M \times (t \times (t + 1) / 2)} of Markov Chain Monte Carlo samples of the variance-covariance
 components in the residual covariance matrix.}
