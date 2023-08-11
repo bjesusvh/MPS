@@ -21,7 +21,7 @@ install_github('https://github.com/bjesusvh/MPS')
 ```r
 # Cleaning and setting local environment
 rm(list = ls())
-setwd("path")
+setwd("your path")
 library(MPS)
 library(BGLR)
 
@@ -63,7 +63,7 @@ out$yHat[selected_lines,]
 ```r
 # Cleaning and setting local environment
 rm(list = ls())
-setwd("~/Desktop/R Package/Ejemplos Finales/example2")
+setwd("your path")
 library(MPS); library(BGLR)
 
 # Loading dataset
@@ -76,7 +76,6 @@ set.seed(647) # for reproducibility
 porc_parental <- 0.4
 idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
 YTrn <- Y; YTrn[idPar,] <- NA
-
 
 # ModelFit using BGLR
 ETA <- list(list(X = X, model = "BRR"), list(K = K, model = "RKHS"))
@@ -95,4 +94,40 @@ out <- ApproxMPS(B0 = B0, yHat = yHat, R = R, method = "kl")
 selected_lines <- which(order(out$loss) %in% 1:36)
 print(selected_lines)
 out$yHat[selected_lines,]
+```
+
+**Example 3: Multi-trait selection with positive and negative direction of genetic progress**
+
+```r
+# Clean and setting local environment
+rm(list = ls())
+setwd("your path")
+library(MPS); library(BGLR)
+
+# Loading dataset
+data(AdvEYT)
+Xscaled <- scale(X, center = TRUE, scale = TRUE)
+G <- tcrossprod(Xscaled) /ncol(X)
+Y2 <- Y
+
+direction <- c(1,1,1,1,1,1,1,1,-1,-1,-1)
+Y2 <- sweep(Y2, 2, direction, '*') 
+
+ETA <- list(list(K = G, model = "RKHS"))
+model <- Multitrait(y = Y2, ETA = ETA, intercept = TRUE,
+                    resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = FALSE),
+                    nIter = 100000, burnIn = 20000,
+                    saveAt = "Fit_")
+
+# Evaluation of loss function
+out <- ApproxMPS(B0 = as.numeric(model$mu), 
+                 yHat = model$ETAHat , 
+                 R = as.matrix(model$resCov$R), 
+                 method = "kl",
+                 direction = direction)
+
+# Best 15% = 30 lines
+selected_lines <- which(order(out$loss) %in% 1:30)
+print(selected_lines)
+sweep(out$yHat[selected_lines,], 2, direction, '*') 
 ```
