@@ -54,12 +54,45 @@ out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
 
 # Best 15% = 36 lines
 selected_lines <- which(order(out$loss) %in% 1:36)
+print(selected_lines)
 out$yHat[selected_lines,]
 ```
 
+**Example 2: Multi-trait Genomic + pedigree selection**
 
-**Example using Genomic + Pedigree**
+```r
+# Cleaning and setting local environment
+rm(list = ls())
+setwd("~/Desktop/R Package/Ejemplos Finales/example2")
+library(MPS); library(BGLR)
 
-**Example using Phenotypic selection**
+# Loading dataset
+data(wheat); Y <- as.matrix(wheat.Y)
+X <- scale(wheat.X, center=TRUE, scale = TRUE)
+K <- wheat.A; n <- nrow(Y)
 
-**Example for Multi-environment best parent selection**
+# Just for example  
+set.seed(647) # for reproducibility
+porc_parental <- 0.4
+idPar <- sample(1:n, ceiling(porc_parental*n), replace = FALSE)
+YTrn <- Y; YTrn[idPar,] <- NA
+
+
+# ModelFit using BGLR
+ETA <- list(list(X = X, model = "BRR"), list(K = K, model = "RKHS"))
+model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,
+                    resCov = list(df0 = 5, S0 = NULL,type = "UN", saveEffects = FALSE),
+                    nIter = 30000, burnIn = 5000)
+
+R <- as.matrix(model$resCov$R)               # residual cov matrix
+B0 <- as.numeric(model$mu)                   # Overall mean
+yHat <- model$ETAHat[model$missing_records,] # Puntual BVs
+
+# Eval loss functions
+out <- ApproxMPS(B0 = B0, yHat = yHat, R = R, method = "kl")
+
+# Best 15% = 36 lines
+selected_lines <- which(order(out$loss) %in% 1:36)
+print(selected_lines)
+out$yHat[selected_lines,]
+```
