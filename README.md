@@ -16,7 +16,7 @@ install_github('https://github.com/bjesusvh/MPS')
 
 ## Examples
 
-**Example using Genomic Selection**
+**Example 1: Multi-trait Genomic selection**
 
 ```r
 # Cleaning and setting local environment
@@ -51,6 +51,10 @@ R <- as.matrix(read.table(file = "R.dat", header = FALSE))
 
 # Evaluating Loss Function
 out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
+
+# Best 15% = 36 lines
+selected_lines <- which(order(out$loss) %in% 1:36)
+out$yHat[selected_lines,]
 ```
 
 
