@@ -13,7 +13,7 @@ LazyData: true
 Depends:
     Matrix (>= 1.5-3),
     tmvtnorm (>= 1.5),
-    parallel (>= 4.2.1),
+    parallel (>= 4.2.0),
     doParallel (>= 1.0.17),
     foreach (>= 1.5.2)
 RoxygenNote: 7.2.3
