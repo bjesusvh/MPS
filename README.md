@@ -172,7 +172,7 @@ IDSel <- which(idToSelect)
 Print(paste0(IDSel, '(', NAsBySelLines, ')')) 
 ```
 
-***Example 6: Identifying superior candidates in multi-environment setting**
+**Example 6: Identifying superior candidates in multi-environment setting**
 
 ```r
 rm(list = ls())                                        # Clean Work space
