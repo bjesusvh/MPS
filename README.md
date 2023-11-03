@@ -175,7 +175,6 @@ Print(paste0(IDSel, '(', NAsBySelLines, ')'))
 ***Example 6: Identifying superior candidates in multi-environment setting**
 
 ```r
-
 rm(list = ls())                                        # Clean Work space
 setwd("~/Desktop/R Package/Ejemplos Finales/example6") # Working directory
 library(MPS); library(BGLR); library(tidyverse)        # Needed libraries
@@ -216,7 +215,6 @@ ZEZEt <- tcrossprod(ZE)         # Environmental effect
 eigen_G <- eigen(G)
 eigen_G0 <- eigen(ZgGZgt)
 
-
 # Interaction terms (MxE model)
 MxE_eigen <- vector("list",ncol(Y))
 for(env in 1:ncol(Y)){ 
@@ -227,7 +225,6 @@ for(env in 1:ncol(Y)){
 n <- nrow(YNA)
 nEnv <- ncol(YNA)
 y <- as.numeric(unlist(YNA))
-
 
 # Number of iterations and burn-in for Bayesian models
 nIter <- 30000; burnIn <- 2000
