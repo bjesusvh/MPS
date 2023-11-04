@@ -54,6 +54,9 @@ model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,
                     resCov = list(type = "UN", saveEffects = TRUE), 
                     nIter = 100000, burnIn = 30000)
 ```
+The following lines of code illustrate how to read the posterior samples from the Markov chain Monte Carlo (MCMC) of the model’s parameters. It is necessary to verify that the MCMC samples have converged to their stationary distributions (CODA package of Plummer (2006) can assist). After the aforementioned step, we pass these MCMC samples as input to the FastMPS function. Next, we will explain each input in detail.
+In this example, `Xcand = XPar` correspond to the matrix of predictors (scaled incidence matrix based on SNPs) for the candidate lines of selection. The dimension of `XPar` is of `n=240` rows (lines) and `k=1279` columns (predictors). `B0` is a matrix of dimension `M=10000 × t=4` corresponding to the intercept/overall mean term in the linear model, where `M` is the number of MCMC samples and `t` is the number of traits. The next argument is `B` which is an array containing regression coefficients of dimension `M=10000 × k=1279 × t=4` of MCMC samples. `R` input represents a matrix of dimension `M×(t×(t+1)/2)` of Markov Chain Monte Carlo samples of the variance-covariance components in the residual covariance matrix. In this example `R` matrix has dimensions `10000 × 10`. In the last argument of FastMPS function is fixed as `"kl"` for Kullback-Leibler Loss. The last line of code obtains the average similarity between each line with the remaining candidates.
+
 
 ```r
 # Reading Posterior MCMC of model parameters to compute expected loss
