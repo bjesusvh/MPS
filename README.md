@@ -141,6 +141,10 @@ print(selected_lines)
 
 **Example 3: Multi-trait selection with positive and negative direction of genetic progress**
 
+In this example we employed a database named AdvEYT which is included in the MPS R package. The data comprised phenotypic records for 190 lines for eleven traits: GY_B5IR_F5IR_BEHT, GY_BLHT, GY_B2IR, and GY_TPE belonging to the grain yield category; Zinc, TKW, GRNPRO and ALVW fall under the quality category; and YR_LUD, YR_NJ and SR_NJ correspond to the diseases category. Furthermore, the dataset includes information on 8,545 SNP-type molecular markers.
+The objective of this analysis is to identify the top 15 percent of lines (approximately 28 lines) based on the criterion of minimum expected loss. For the Grain Yield and Quality traits, the desired direction of genetic progress is positive, whereas for the Diseases category traits, progress in the negative direction is sought.
+The first code segment, clears the R memory, sets the desired working directory, loads the necessary libraries and the database to be used. For computational convenience we used the genomic relationship matrix (G=(ZZ^')/p) to fit a multi-trait GBLUP model, where Z is the standardized SNP matrix. The last line of code creates a copy of the phenotypic records matrix to reverse direction of observed phenotypic values for Disease category traits.
+
 ```r
 rm(list = ls());                                 # Clean R memory
 setwd("your-path")                               # Set the working directory    
@@ -149,15 +153,20 @@ data(AdvEYT)                                     # Load data
 Z <- scale(X, center = TRUE, scale = TRUE)       # Standardized SNPs
 G <- tcrossprod(Z) /ncol(Z)                      # G relationship matrix
 Y2 <- Y                                          # copy of the response                  
+```
+The next code begins by defining a vector that indicates the desired direction of improvement: 1 indicates that we aim to increase the genetic value in that trait, while -1 indicates a desire to decrease the genetic value. In this case, the phenotypic records of the traits YR_LUD, YR_NJ, and SR_NJ are located in the last three columns of Y, therefore direction object has eight ones and finally three minus one. Subsequently, in Y2, we reverse the direction of the response variable. We define the linear predictor (ETA) as a function of the G matrix by incorporating random effects, which are modeled through nonparametric genomic regressions based on reproducing kernel Hilbert spaces (RKHS) methods. This approach allows BGLR to achieve computationally efficient model fitting, however, it does not yield Markov Chain Monte Carlo chains. Therefore, we will use the ApproxMPS function from the MPR package to approximate expected losses. Note that Y2 is given to the regression model using the Multitrait function from BGLR, not Y.
 
-
+```r
 direction <- c(1,1,1,1,1,1,1,1,-1,-1,-1)
 Y2 <- sweep(Y2, 2, direction, '*') 
 ETA <- list(list(K = G, model = "RKHS"))
 model <- Multitrait(y = Y2, ETA = ETA, intercept = TRUE,
           resCov = list(type = "UN"),
           nIter = 100000, burnIn = 20000)
+```
+Finally, the ApproxMPS function is called, and arguments like example 2 are provided, which are the outputs of BGLR. 
 
+```r
 out <- ApproxMPS(B0 = as.numeric(model$mu), yHat = model$ETAHat , 
                  R = as.matrix(model$resCov$R), method = "kl",
                  direction = direction)
