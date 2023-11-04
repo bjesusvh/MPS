@@ -255,6 +255,10 @@ Print(paste0(IDSel, '(', NAsBySelLines, ')'))
 
 **Example 6: Identifying superior candidates in multi-environment setting**
 
+Sometimes, we have records for a specific trait assessed in different individuals and environments. MPS can also assist in identifying, from a set of candidates, which individuals perform best across all environments. In this example, we have taken data from 250 lines evaluated in three environments ('Bed5IR,' 'Drip,' and 'Bed2IR'). The original data, labeled 'DATASET4to5.Wheat.rdata,' can be accessed at https://hdl.handle.net/11529/10907, and its full description can be found in Montesinos-López et al. (2017). 
+
+To borrow information across environments while allowing marker effects to change across environments, we fitted a Markers-Environment interaction model (MxE GBLUP) (López-Cruz et al., 2015). Detailed explanation how to fit MxE GBLUP model using BGLR can be found in https://github.com/MarcooLopez. To simulate scenarios of Training and Candidate/Parental sets, the data was randomly split into 20% (50 lines) for selection candidates. After fitting the model and approximating the expected loss for every candidate, we retained the top 40% of candidates (20 lines) with the minimum expected loss.
+
 ```r
 rm(list = ls())                                        # Clean Work space
 setwd("~/Desktop/R Package/Ejemplos Finales/example6") # Working directory
@@ -351,8 +355,6 @@ dfToPlot = matrix(c(dif2, dif3), nrow = 2, byrow = TRUE)
 colnames(dfToPlot) = colnames(Y)
 rownames(dfToPlot) = c('With respect overall mean', 'With respect environment means')
 
-
-tiff('Figure6.tiff', w = 480, h = 400)
 barplot(dfToPlot, 
         main = "", 
         xlab = "Environments", 
@@ -360,6 +362,4 @@ barplot(dfToPlot,
         beside = TRUE, 
         legend.text = rownames(dfToPlot),
         args.legend = list(bty = "n", x = "topleft", ncol = 1))
-
-dev.off()
 ```
