@@ -70,6 +70,21 @@ R <- as.matrix(read.table(file = "R.dat",    # Residual covariance matrix
 out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
 out
 ```
+After running the FastMPS function, the output list contains the posterior expected loss (loss), the ranking of each candidate line for selection, and a data.frame (yHat) containing the predictions (BV) for all traits.
+
+```r
+> str(out)
+List of 4
+ $ method : chr "kl"
+ $ loss   : num [1:240] 0.482 0.466 0.222 0.182 0.49 ...
+ $ ranking: num [1:240] 214 208 71 41 217 236 201 59 126 158 ...
+ $ yHat   :'data.frame':    240 obs. of  4 variables:
+  ..$ X1: num [1:240] -0.833 -0.847 0.497 0.511 -0.125 ...
+  ..$ X2: num [1:240] 0.186 0.139 -0.394 0.211 -0.348 ...
+  ..$ X3: num [1:240] -0.366 -0.4283 -0.2819 0.1197 0.0116 ...
+  ..$ X4: num [1:240] -0.276 -0.2762 -0.3616 -0.0803 0.0753 ...
+ - attr(*, "class")= chr "MPS"
+```
 
 
 **Example 2: Multi-trait Genomic + pedigree selection**
