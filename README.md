@@ -179,6 +179,10 @@ sweep(out$yHat[selected_lines,], 2, direction, '*')
 
 **Example 5. Candidates’ selection with missing phenotypic records for some traits**
 
+At times, partial phenotypic information is available for certain traits in some candidate lines for selection. By combining prediction using BGLR and expected loss calculation using MPS, it is possible to identify which lines the breeder should select. To illustrate this concept, the database accompanying the MPS package is used. Let’s assume we are interested in identifying the top 20% (40 lines) considering the traits GY_BLHT, TKW, GRNPRO, and SR_NJ. However, out of the 190 lines in the dataset, 70 of them lack phenotypic records for the trait GY_BLHT, 50 lines have no information on TKW, 60 lines have missing data for GRNPRO, and 20 lines have missing information for SR_NJ.
+The following set of code clears the R memory, sets the working directory, loads the necessary packages, generates a seed for reproducibility in this example, and subsets the relevant traits.
+
+
 ```r
 rm(list = ls())                                        # Clean Work space
 setwd("~/Desktop/R Package/Ejemplos Finales/example5") # Working directory
@@ -186,7 +190,10 @@ library(MPS); library(BGLR)                            # Needed libraries
 set.seed(752); data(AdvEYT)                       # Reproducibility and Load dataset
 Y <- Y[,c('GY_BLHT', 'TKW', 'GRNPRO', 'SR_NJ')]   # Traits of interest
 n <- nrow(Y)                                      # Number of candidates
+```
+To simulate the scenario of missing data, randomly missing data (NA) are introduced. As improvement direction is decreasing for the third trait, it is multiplied by -1.
 
+```r
 # Allocating randomly missing phenotypic data in each trait
 Y[sort(sample(1:n, size = 70, replace = FALSE)), 1] <- NA
 Y[sort(sample(1:n, size = 50, replace = FALSE)), 2] <- NA
@@ -194,7 +201,11 @@ Y[sort(sample(1:n, size = 60, replace = FALSE)), 3] <- NA
 Y[sort(sample(1:n, size = 20, replace = FALSE)), 4] <- NA
 Y2 <- Y                   # Copy of phenotypic records
 Y2[,4] <- Y2[,4] * -1     # Change sign in SR_NJ trait
+```
 
+The genotypic information is standardized, and the linear predictor (ETA) is defined by selecting model = SpikeSlab to instruct BGLR to impose prior distributions on regression coefficients, allowing for automatic variable selection (for details, see Pérez-Rodrı́guez & de los Campos, 2022). The argument saveEffects = TRUE instructs to save the MCMC chains. Finally, the model is fitted by specifying the number of iterations (nIter) and the burn-in (burnIn). The argument resCov = list(type = "UN", saveEffects = TRUE) indicates to BGLR that an unstructured covariance matrix is assumed for the residual covariance matrix of the linear model, and it is also requested to save the MCMC chains for this matrix.
+
+```r
 # Center and scaling genomic info
 X <- scale(X, center = TRUE, scale = TRUE)
 
@@ -204,7 +215,10 @@ ETA <- list(list(X = X, model = "SpikeSlab", saveEffects = TRUE))
 # Run the model
 model <- Multitrait(y = Y2, ETA = ETA, intercept = TRUE,
  resCov = list(type = "UN", saveEffects = TRUE), nIter = 100000, burnIn = 30000)
+```
+To obtain the expected loss, it is necessary to read the MCMC chains from the model fit, which serves as input to the FastMPS function. The direction argument specifies that for the first three traits, the genetic value need to be increased, while for the fourth trait, the progress is in the opposite direction. Finally, the average values of the predicted BVs for the selected and non-selected lines are presented.
 
+```r
 # Reading Posterior MCMC of model parameters & direction
 B0 <- as.matrix(read.table(file = "mu.dat", header = FALSE))# Overall mean                
 B <- readBinMatMultitrait('ETA_1_beta.bin')                 # Regression coefficients
@@ -218,11 +232,25 @@ yHat <- out$yHat                               # Predicted BVs
 yHat[,4] <- -1*yHat[,4]                        # Reverse order of BVs for trait 4
 
 colMeans(yHat[idToSelect,])                    # Average BVs of selected
-colMeans(yHat[!idToSelect,])                   # Average BVs of non-selected
+       X1        X2        X3        X4 
+101.85855  53.29620  13.35975  22.59924 
 
+colMeans(yHat[!idToSelect,])                   # Average BVs of non-selected
+       X1        X2        X3        X4 
+100.95011  52.45389  13.10432  26.27064
+```
+The IDs of the selected individuals are presented below. The number in parentheses indicates the count of missing trait records. For instance, '1(3)' denotes that the top line (with the lowest expected loss) is the first candidate in the dataset, originally missing data in three traits. The same explanation applies to the rest of the selected candidates. This example illustrates how breeders can effectively choose individuals even in the presence of missing phenotypic records for some traits.
+
+```r
 NAsBySelLines <- apply(Y2[which(idToSelect),], 1, function(x) sum(is.na(x)))
 IDSel <- which(idToSelect)
-Print(paste0(IDSel, '(', NAsBySelLines, ')')) 
+Print(paste0(IDSel, '(', NAsBySelLines, ')'))
+
+[1] "1(3)"   "4(2)"   "14(1)"  "21(4)"  "29(1)"  "34(2)"  "40(2)"  "42(3)" 
+[9] "49(1)"  "50(3)"  "53(1)"  "54(2)"  "58(3)"  "63(3)"  "65(2)"  "66(1)" 
+[17] "70(3)"  "73(1)"  "79(2)"  "92(1)"  "95(0)"  "99(1)"  "101(3)" "118(2)"
+[25] "119(1)" "129(0)" "131(3)" "137(1)" "142(3)" "143(2)" "144(2)" "147(1)"
+[33] "148(3)" "149(1)" "160(1)" "162(2)" "171(2)" "173(2)" "174(3)" "190(2)"
 ```
 
 **Example 6: Identifying superior candidates in multi-environment setting**
