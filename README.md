@@ -20,7 +20,6 @@ install_github('https://github.com/bjesusvh/MPS')
 
 In this example, we use the wheat database that is included with the `R` package `BGLR`. The database consists of genotypic and phenotypic information of 599 wheat lines in four traits. The genotypic information comprises of 1279 SNP-type molecular markers. In the following code, the `R` memory is cleaned, and the working directory is fixed. After, the two R packages used are loaded into `R` (`BGLR` for regression model, `MPS` for evaluation of posterior expected loss). Phenotypic records are saved on `Y` object and `X` contains the standardized genotypic data (SNPs molecular markers).
 
-
 ```r
 rm(list = ls())                  # Cleaning R memory
 setwd("path in your computer")   # Working directory  
@@ -40,7 +39,10 @@ idPar <- sort(sample(1:n, # Random observation for candidate set
 XTrn <- X[-idPar,]        # Genotypic data in Training set
 XPar <- X[idPar, ]        # Genotypic data in Parental set
 YTrn <- Y[-idPar,]        # Phenotypic data in Training set
+```
+After that, the data is partitioned, with 60% being used to train the model for prediction purposes (simulating the scenario of having related historical information), while the remaining 40% of the data simulates the set of candidate individuals for selection. set.seed(647) is used only for reproducibility of results presented in this article. The ID of candidate/parental lines is sampled without replacement and then sorted and saved in idPar R vector. The last three lines of code perform a sub setting of phenotypic and genotypic data in training and parental set.
 
+```r
 # Specification of the linear predictor for BGLR
 ETA <- list(list(X = X, model = "BRR", saveEffects = TRUE))
 
@@ -60,6 +62,7 @@ R <- as.matrix(read.table(file = "R.dat",    # Residual covariance matrix
 out <- FastMPS(Xcand = XPar, B0 = B0, B = B, R = R, method = "kl")
 out
 ```
+
 
 **Example 2: Multi-trait Genomic + pedigree selection**
 
