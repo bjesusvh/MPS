@@ -86,8 +86,9 @@ List of 4
  - attr(*, "class")= chr "MPS"
 ```
 
-
 **Example 2: Multi-trait Genomic + pedigree selection**
+
+For this example, the same database as in the previous exercise (example 1) is employed, but with the incorporation of pedigree and molecular markers as predictors. The first part of the code is very similar to that of example 1, so we omit its explanation. The only difference here is that in K, the pedigree information is stored.
 
 ```r
 rm(list = ls())                  # Cleaning memory
@@ -99,6 +100,12 @@ Y <- as.matrix(wheat.Y)          # Phenotypic records
 X <- scale(wheat.X, center = TRUE, scale = TRUE) # Genotypic data
 K <- wheat.A  
 
+
+out$yHat[selected_lines,]
+```
+In total 60% of the data is allocated for training the model, while the remaining 40% simulates the role of candidate lines for selection. 
+
+```r
 set.seed(647)             # Seed for reproducibility
 n <- nrow(Y)              # Number of records
 porc_parental <- 0.4      # Percentage in candidates
@@ -106,12 +113,21 @@ idPar <- sort(sample(1:n, # Random observation for candidate set
                      ceiling(porc_parental*n), 
                      replace = FALSE))
 YTrn <- Y; YTrn[idPar,] <- NA
+```
+The linear predictor now incorporates the matrix of molecular markers, and associated regression coefficients are subject to Ridge penalization. Meanwhile, the relationship matrix (pedigree) is used to incorporate random effects which is modeled through nonparametric genomic regressions based on reproducing kernel Hilbert spaces (RKHS) methods, details of RKHS approach can be found in Perez-Rodriguez and de los Campos (2022).
 
+
+```r
 # ModelFit using BGLR
 ETA <- list(list(X = X, model = "BRR"), list(K = K, model = "RKHS"))
 model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,
         resCov = list(type = "UN"), nIter = 100000, burnIn = 30000)
+```
+Finally, outputs from Multi-trait R function are inputs of the MPS R Package. In this example, the ApproxMPS function is used, which is a version that approximates the loss of each candidate line for selection when the MCMC samples are not available from BGLR. This approximation should be taken with caution, as it assumes that the predictive distribution of each candidate line is multivariate normal.
+The ApproxMPS function receives several arguments. Firstly, B0 is a vector representing the overall mean of each trait, with a length equal to the number of traits (t=4). Then, yHat should be a matrix containing punctual posterior mean of each candidate, with dimensions n=240 x t=4, where n is the number of candidates and t is the number of traits. The next argument is R, which is a square matrix representing the residual covariance matrix with dimensions t=4 x t=4.
+The target argument is an optional vector of length equal to the number of traits (t=4) that reflects the breeder’s expectation. If not provided, the algorithm determines it internally. Lastly, the method argument specifies the loss function to be used and must be one of "kl" for Kullback-Leibler, "energy" for Energy Score, or "malf" for Multivariate Asymmetric Loss.
 
+```r
 B0 <- as.numeric(model$mu)                    # Overall mean
 yHat <- model$ETAHat[model$missing_records, ] # Puntual BVs
 R <- as.matrix(model$resCov$R)                # Residual Covariance matrix
@@ -121,7 +137,6 @@ out <- ApproxMPS(B0 = B0, yHat = yHat,        # Evaluate loss functions
 # Best 15% = 36 lines
 selected_lines <- which(order(out$loss) %in% 1:36)
 print(selected_lines)
-out$yHat[selected_lines,]
 ```
 
 **Example 3: Multi-trait selection with positive and negative direction of genetic progress**
