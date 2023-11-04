@@ -18,6 +18,9 @@ install_github('https://github.com/bjesusvh/MPS')
 
 **Example 1: Multi-trait Genomic selection**
 
+In this example, we use the wheat database that is included with the `R` package `BGLR`. The database consists of genotypic and phenotypic information of 599 wheat lines in four traits. The genotypic information comprises of 1279 SNP-type molecular markers. In the following code, the `R` memory is cleaned, and the working directory is fixed. After, the two R packages used are loaded into `R` (`BGLR` for regression model, `MPS` for evaluation of posterior expected loss). Phenotypic records are saved on `Y` object and `X` contains the standardized genotypic data (SNPs molecular markers).
+
+
 ```r
 rm(list = ls())                  # Cleaning R memory
 setwd("path in your computer")   # Working directory  
