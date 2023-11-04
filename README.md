@@ -35,12 +35,15 @@ porc_parental <- 0.4      # Percentaje in candidates
 idPar <- sort(sample(1:n, # Random observation for candidate set
                      ceiling(porc_parental*n), 
                      replace = FALSE))
+```
+After that, the data is partitioned, with 60% being used to train the model for prediction purposes (simulating the scenario of having related historical information), while the remaining 40% of the data simulates the set of candidate individuals for selection. set.seed(647) is used only for reproducibility of results presented in this article. The ID of candidate/parental lines is sampled without replacement and then sorted and saved in idPar R vector. The last three lines of code perform a sub setting of phenotypic and genotypic data in training and parental set.
 
+```r
 XTrn <- X[-idPar,]        # Genotypic data in Training set
 XPar <- X[idPar, ]        # Genotypic data in Parental set
 YTrn <- Y[-idPar,]        # Phenotypic data in Training set
 ```
-After that, the data is partitioned, with 60% being used to train the model for prediction purposes (simulating the scenario of having related historical information), while the remaining 40% of the data simulates the set of candidate individuals for selection. set.seed(647) is used only for reproducibility of results presented in this article. The ID of candidate/parental lines is sampled without replacement and then sorted and saved in idPar R vector. The last three lines of code perform a sub setting of phenotypic and genotypic data in training and parental set.
+Next, the linear predictor is specified in ETA object imposing Gaussian priors (BRR) on regression coefficients to emulate Ridge Regression. The multi-trait model is fitted using the Multi-trait function of BGLR R package passing as arguments the phenotypic records and the linear predictor. Note that saveEffects = TRUE in the linear predictor specification (ETA) and in resCov argument is for saving posterior MCMC samples of regression coefficients and residual variance-covariance, respectively.
 
 ```r
 # Specification of the linear predictor for BGLR
@@ -50,7 +53,9 @@ ETA <- list(list(X = X, model = "BRR", saveEffects = TRUE))
 model <- Multitrait(y = YTrn, ETA = ETA, intercept = TRUE,   
                     resCov = list(type = "UN", saveEffects = TRUE), 
                     nIter = 100000, burnIn = 30000)
+```
 
+```r
 # Reading Posterior MCMC of model parameters to compute expected loss
 B0 <- as.matrix(read.table(file = "mu.dat",  # Overall mean
                            header = FALSE))
