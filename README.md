@@ -241,7 +241,7 @@ The IDs of the selected individuals are presented below. The number in parenthes
 ```r
 NAsBySelLines <- apply(Y2[which(idToSelect),], 1, function(x) sum(is.na(x)))
 IDSel <- which(idToSelect)
-Print(paste0(IDSel, '(', NAsBySelLines, ')'))
+print(paste0(IDSel, '(', NAsBySelLines, ')'))
 
 [1] "1(3)"   "4(2)"   "14(1)"  "21(4)"  "29(1)"  "34(2)"  "40(2)"  "42(3)" 
 [9] "49(1)"  "50(3)"  "53(1)"  "54(2)"  "58(3)"  "63(3)"  "65(2)"  "66(1)" 
