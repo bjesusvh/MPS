@@ -99,9 +99,6 @@ data(wheat)                      # Loading dataset
 Y <- as.matrix(wheat.Y)          # Phenotypic records  
 X <- scale(wheat.X, center = TRUE, scale = TRUE) # Genotypic data
 K <- wheat.A  
-
-
-out$yHat[selected_lines,]
 ```
 In total 60% of the data is allocated for training the model, while the remaining 40% simulates the role of candidate lines for selection. 
 
