@@ -2,7 +2,7 @@ Package: MPS
 Type: Package
 Title: Multi-trait Parental Selection
 Version: 0.1.0
-Author: Bartolo de Jesús Villar-Hernández, Paulino Perez Rodriguez
+Author: Bartolo de Jesús Villar-Hernández
 Maintainer: Bartolo de Jesús Villar-Hernández <bjesusvh@gmail.com>
 Description: An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or Phenotypic Selection.
 References:
