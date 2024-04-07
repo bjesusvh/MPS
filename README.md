@@ -258,7 +258,7 @@ To borrow information across environments while allowing marker effects to chang
 
 ```r
 rm(list = ls())                                        # Clean Work space
-setwd("~/Desktop/R Package/Ejemplos Finales/example6") # Working directory
+setwd("your working directory")                        # Working directory
 library(MPS); library(BGLR); library(tidyverse)        # Needed libraries
 load('MultiEnvWheat.RData')                            # Load dataset                   
 df <- Trigo.Data[,c(1,2,3)]                            # Keep only DTHD trait
