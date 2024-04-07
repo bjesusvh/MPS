@@ -101,6 +101,10 @@ aproxMALF <- function(mu2, muS, tau){
   loss <- sum.abs.e + as.vector(error %*% tau)
 }
 
+# https://stackoverflow.com/questions/37613345/r-convert-upper-triangular-part-of-a-matrix-to-symmetric-matrix
+constuyeSimOnes <- function(m){
+  m = m + t(m) - 2*diag(diag(m)) + diag(1,nrow=dim(m)[1])
+  return (m)}
 
 # # Univariate loss functions
 # single_KL <- function(){
