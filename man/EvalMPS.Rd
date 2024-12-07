@@ -43,7 +43,7 @@ Default is 1 (increase) for all traits.}
 A list with Breeding values, posterior expected loss, and the rank for each candidate of selection.
 }
 \description{
-Function for computing Kullback-Leibler, Energy Score, or Multivariate Asymmetric Loss in Multitrait Parental Selection.
+Function to compute computing Kullback-Leibler, Energy Score, or Multivariate Asymmetric Loss in Multitrait Parental Selection.
 }
 \examples{
 \dontrun{
@@ -89,5 +89,5 @@ plotMPS(MPSObject = out, Dist = d, qLoss = 0.25, qDistance = 0.25)
 \references{
 Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
    
-   Villar-Hernández, B.J., et.al. (2021). Application of multi-trait Bayesian decision theory for parental genomic selection. 11(2). 1-14
+   Villar-Hernández, B.J., et.al. (2021). Application of multi-trait Bayesian decision theory for parental genomic selection. G3 Genes|Genomes|Genetics. 11(2). 1-14
 }

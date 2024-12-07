@@ -4,12 +4,14 @@
 \alias{SimMatrix}
 \title{Get average shared alleles with relatives}
 \usage{
-SimMatrix(Xcand)
+SimMatrix(Xcand, num_cores = NULL)
 }
 \arguments{
 \item{Xcand}{(a matrix) of predictors of the candidates for selection. Dimensions \eqn{n \times k}, where
 \eqn{n} is the number of individuals in the candidate set and \eqn{k} is the
 number of predictors.}
+
+\item{num_cores}{(Integer) Number of cores to use.}
 }
 \value{
 A squared matrix of dimension \eqn{n \times n} with proportion of shared alleles with relatives for each candidate of selection.

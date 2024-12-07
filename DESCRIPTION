@@ -16,4 +16,4 @@ Depends:
     parallel (>= 4.2.0),
     doParallel (>= 1.0.17),
     foreach (>= 1.5.2)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
