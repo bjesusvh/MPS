@@ -12,8 +12,8 @@ MultitraitOPS(Xcand, B, thresholds, target = NULL, method = "kl")
 \eqn{k}: Number of predictors.}
 
 \item{B}{A list of length equal to the number of traits. Each element in the list is a matrix containing regression coefficients, with dimensions \eqn{M \times k}.
-- \eqn{M}: Number of Markov Chain Monte Carlo (MCMC) samples.
-- \eqn{k}: Number of predictors.}
+\eqn{M}: Number of Markov Chain Monte Carlo (MCMC) samples.
+\eqn{k}: Number of predictors.}
 
 \item{thresholds}{A list of matrices that contains thresholds values from ordinal regression, with dimensions \eqn{M \times t}, derived from Markov Chain Monte Carlo (MCMC) samples.
 Thresholds are the values that define the boundaries between the ordinal categories in the outcome variable. 
@@ -22,10 +22,10 @@ They are cut-points on the underlying scale of the latent variable that determin
 \item{target}{A list of vectors, where each vector corresponds to an ordinal trait. Each vector must contain probabilities or proportions for the categories within that trait. 
 The length of each vector must match the number of categories in the trait, and the probabilities/proportions must sum to 1. Zero entries are not allowed.}
 
-\item{method}{A string indicating the loss function to be used. Options are "kl" for Kullback-Leibler, "hellinger" for Hellinger, or "bhattacharyya". Default is "kl".}
+\item{method}{A string indicating the loss function to be used. Options are "kl" for Kullback-Leibler, "hellinger" and "bhattacharyya". Default is "kl".}
 }
 \value{
-A list containing the posterior expected loss, the rank for each candidate, and the predicted category for each trait.
+A list containing the expected loss (distance), the rank for each candidate, and the predicted category for each trait.
 }
 \description{
 Function to compute Kullback-Leibler, Hellinger, or Bhattacharyya loss in Multitrait Ordinal Parental Selection.

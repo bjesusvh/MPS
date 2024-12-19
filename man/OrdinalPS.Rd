@@ -25,7 +25,7 @@ The probabilities/proportions must sum to 1. Zero entries are not allowed.}
 \item{method}{A string indicating the loss function to be used. Options are "kl" for Kullback-Leibler, "hellinger" for Hellinger, or "bhattacharyya". Default is "kl".}
 }
 \value{
-A list containing the posterior expected loss, the rank for each candidate, and the predicted category.
+A list containing the posterior expected loss, the rank for each candidate, and the probability of each category.
 }
 \description{
 Function to compute Kullback-Leibler, Hellinger, or Bhattacharyya loss in Single-Trait Ordinal Parental Selection.

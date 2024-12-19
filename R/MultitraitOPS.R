@@ -13,7 +13,7 @@
 #'    They are cut-points on the underlying scale of the latent variable that determine the category boundaries
 #' @param target A list of vectors, where each vector corresponds to an ordinal trait. Each vector must contain probabilities or proportions for the categories within that trait. 
 #' The length of each vector must match the number of categories in the trait, and the probabilities/proportions must sum to 1. Zero entries are not allowed.
-#' @param method A string indicating the loss function to be used. Options are "kl" for Kullback-Leibler, "jeffreys" for Jeffreys (symmetric Kullback-Leibler), "chi2" for Additive Symmetric Chi Squared, "hellinger" for Hellinger, "bhattacharyya" or "cosine" for Cosine. Default is "kl".
+#' @param method A string indicating the loss function to be used. Options are "kl" for Kullback-Leibler, "hellinger" and "bhattacharyya". Default is "kl".
 #' @return A list containing the expected loss (distance), the rank for each candidate, and the predicted category for each trait.
 #' @references 
 #'    Villar-Hernández, B.J., et.al. (2018). A Bayesian Decision Theory Approach for Genomic Selection. G3 Genes|Genomes|Genetics. 8(9). 3019–3037
@@ -28,8 +28,8 @@
 MultitraitOPS <- function(Xcand, B, thresholds, target = NULL, method = "kl") {
   
   # Validación del método
-  if (!(method %in% c("kl", "hellinger", "bhattacharyya", "chi2", "jeffreys", "cosine"))) {
-    stop("Invalid method. Choose 'kl', jeffreys, 'hellinger', 'chi2', 'cosine' or 'bhattacharyya'.")
+  if (!(method %in% c("kl", "hellinger", "bhattacharyya"))) {
+    stop("Invalid method. Choose 'kl', 'hellinger' or 'bhattacharyya'.")
   }
 
   # Validación de entradas no nulas
