@@ -25,7 +25,7 @@
 #' \dontrun{
 #' # Example usage of OrdinalMPS
 #' }
-OrdinalPS <- function(Xcand, B, thresholds, target = NULL, method = NULL) {
+OrdinalPS <- function(Xcand, B, thresholds, target = NULL, method = "kl") {
   
   # Revisar que la función de pérdida sea válida
   if (!(method %in% c("kl", "hellinger", "bhattacharyya"))) stop("The method is not valid.\n")
