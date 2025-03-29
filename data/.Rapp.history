@@ -1,2 +1,5 @@
 load("/Users/bjesusvh/Documents/00 Research/R Package/MPS/data/MultiEnvWheat.RData")
 ls()
+load("/Users/bjesusvh/Documents/00 Research/R Package/MPS/data/ordinalData.RData")
+ls()
+dim(X)
