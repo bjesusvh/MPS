@@ -1,5 +1,5 @@
 # MPS
-An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or Phenotypic Selection.
+An R Package to Assist Multi-trait Parental Selection via Genomic, Pedigree, or Phenotypic Selection. It works on multiple quantitative traits or multiple ordinal traits.
 
 ## Installation from GitHub:
 
